@@ -32,18 +32,18 @@ varspro = cell(1,3);
 varsanti = cell(1,3);
 powspctrm = zeros(nsub, 68,20,40);
 
-for subj = 4:7 %41%length(subjects)
-     try
+for subj = 4:6%14 %41%length(subjects)
+      try
     %%
     datapath = strcat('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\',subjects{subj});
     cd (datapath)
     load tfrprocueleftbl
-    load tfrprosaccleftbl
+     load tfrprosaccleftbl
     load tfranticueleftbl
     load tfrantisaccleftbl
     
     load tfrprocuerightbl
-    load tfrprosaccrightbl
+     load tfrprosaccrightbl
     load tfranticuerightbl
     load tfrantisaccrightbl
     

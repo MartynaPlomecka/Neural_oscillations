@@ -10,23 +10,23 @@ x = dir('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\');
 subjects = {x.name};
 clear x
 
-for subj = 6:7%:6%54%length(subjects) %186 - BA5 didnt work, 346- BY2
+for subj = 6:7%:length(subjects)
     
-    %%
     datapath = strcat('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\',subjects{subj});
     cd (datapath)
     keep datapath subj subjects % Tzvetan added this line to remove the leftovers from the prev subject
-    try
-        load EEGprocue
-    catch
-        continue
-    end
+    %     try
+    load EEGprocue
+    %     catch
+    %         continue
+    %     end
     EEG=EEGprocue;
     
     %% reorganize data to be compatible with FieldTrip
     ftdata.fsample = EEG.srate;
     ftdata.dir = EEG.direction;
     ftdata.correctness = EEG.correctness;
+    ftdata.rt = EEG.rt;
     
     ftdata.label   = {EEG.chanlocs(:).labels};
     for trl = 1:EEG.trials
@@ -44,16 +44,16 @@ end
 
 
 
-for subj = 6:7
+for subj = 6:7%:length(subjects)
     %%
     datapath = strcat('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\',subjects{subj});
     cd (datapath)
     keep datapath subj subjects % Tzvetan added this line to remove the leftovers from the prev subject
-    try
-        load EEGanticue
-    catch
-        continue
-    end
+    %     try
+    load EEGanticue
+    %     catch
+    %         continue
+    %     end
     
     
     
@@ -63,6 +63,7 @@ for subj = 6:7
     ftdata.fsample = EEG.srate;
     ftdata.dir = EEG.direction;
     ftdata.correctness = EEG.correctness;
+    ftdata.rt = EEG.rt;
     
     
     ftdata.label   = {EEG.chanlocs(:).labels};
@@ -79,23 +80,24 @@ end
 
 %% saccade locked
 
-for subj = 6:7%:6%:6%54%length(subjects) %186 - BA5 didnt work, 346- BY2
+for subj = 6:7%:length(subjects)
     
     datapath = strcat('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\',subjects{subj});
     cd (datapath)
     keep datapath subj subjects % Tzvetan added this line to remove the leftovers from the prev subject
-    try
-        load EEGprosacc
-    catch
-        continue
-    end
-    
+    %     try
+    load EEGprosacc
+    %     catch
+    %         continue
+    %     end
+    %
     
     EEG=EEGprosacc;
     %% reorganize data to be compatible with FieldTrip
     ftdata.fsample = EEG.srate;
     ftdata.dir = EEG.direction;
     ftdata.correctness = EEG.correctness;
+    ftdata.rt = EEG.rt;
     
     ftdata.label   = {EEG.chanlocs(:).labels};
     for trl = 1:EEG.trials
@@ -106,23 +108,23 @@ for subj = 6:7%:6%:6%54%length(subjects) %186 - BA5 didnt work, 346- BY2
     prosaccdata = ftdata;
     save prosaccdata prosaccdata
     clear ftdata
-
+    
 end
 
 
 
 
-for subj = 6:7%5%:6
+for subj = 6:7%:length(subjects)
     
     datapath = strcat('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\',subjects{subj});
     cd (datapath)
     keep datapath subj subjects % Tzvetan added this line to remove the leftovers from the prev subject
     
-    try
-        load EEGantisacc
-    catch
-        continue
-    end
+    %     try
+    load EEGantisacc
+    %     catch
+    %         continue
+    %     end
     
     
     EEG=EEGantisacc;
@@ -131,6 +133,7 @@ for subj = 6:7%5%:6
     ftdata.fsample = EEG.srate;
     ftdata.dir = EEG.direction;
     ftdata.correctness = EEG.correctness;
+    ftdata.rt = EEG.rt;
     
     
     ftdata.label   = {EEG.chanlocs(:).labels};

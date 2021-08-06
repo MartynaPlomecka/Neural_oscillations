@@ -9,7 +9,7 @@ clear x
 
 %% PROSACCADES cue locked
 for subj = 6:7%length(subjects) %186 - BA5 didnt work, 346- BY2
-    try
+%     try
         datapath = strcat('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\',subjects{subj});
         cd (datapath)
         
@@ -64,8 +64,8 @@ for subj = 6:7%length(subjects) %186 - BA5 didnt work, 346- BY2
         cfg.baselinetype    = 'db';
         tfrprocuerightbl           = ft_freqbaseline(cfg,tfrprocueright);
         save tfrprocuerightbl tfrprocuerightbl
-    catch
-    end
+%     catch
+%     end
 end
 
 
@@ -73,7 +73,10 @@ end
 %% proSACCADE LOCKED
 
 for subj = 6:7%length(subjects) %186 - BA5 didnt work, 346- BY2
-    try
+%     try
+        datapath = strcat('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\',subjects{subj});
+        cd (datapath)
+        
         load data68prosacc
         
         cfg              = [];
@@ -124,16 +127,16 @@ for subj = 6:7%length(subjects) %186 - BA5 didnt work, 346- BY2
         cfg.baselinetype    = 'db';
         tfrprosaccrightbl           = ft_freqbaseline(cfg,tfrprosaccright);
         save tfrprosaccrightbl tfrprosaccrightbl
-    catch
-    end
+%     catch
+%     end
 end
 
 
 %% antiSACCADES cue locked
 
 
-for subj = 4:6%length(subjects) %186 - BA5 didnt work, 346- BY2
-    try
+for subj = 6:7%length(subjects) %186 - BA5 didnt work, 346- BY2
+%     try
         datapath = strcat('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\',subjects{subj});
         cd (datapath)
         
@@ -189,8 +192,8 @@ for subj = 4:6%length(subjects) %186 - BA5 didnt work, 346- BY2
         tfranticuerightbl           = ft_freqbaseline(cfg,tfranticueright);
         save tfranticuerightbl tfranticuerightbl
         
-    catch
-    end
+%     catch
+%     end
 end
 
 
@@ -198,7 +201,9 @@ end
 
 %% antiSACCADE LOCKED
 for subj = 6:7%length(subjects) %186 - BA5 didnt work, 346- BY2
-    try
+%     try
+        datapath = strcat('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\',subjects{subj});
+        cd (datapath)
         load data68antisacc
         
         cfg              = [];
@@ -249,6 +254,6 @@ for subj = 6:7%length(subjects) %186 - BA5 didnt work, 346- BY2
         cfg.baselinetype    = 'db';
         tfrantisaccrightbl           = ft_freqbaseline(cfg,tfrantisaccright);
         save tfrantisaccrightbl tfrantisaccrightbl
-    catch
-    end
+%     catch
+%     end
 end
