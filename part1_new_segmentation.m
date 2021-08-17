@@ -9,7 +9,7 @@ x = dir('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\')
 subjects = {x.name};
 clear x
 
-for subj = 6:7%:14%:length(subjects)
+for subj = 177:length(subjects)
     
     
     datapath = strcat('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\',subjects{subj});

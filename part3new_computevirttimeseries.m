@@ -1,4 +1,4 @@
-clc
+ clc
 clear
 x = dir('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\');
 subjects = {x.name};
@@ -13,7 +13,7 @@ load(fullfile(path_headmodeling, 'dkatlas.mat'));
 load(fullfile(path_headmodeling, 'templatesourcesheet68.mat'));
 
 %%
-for subj = 6:7%:length(subjects)
+for subj = 25:length(subjects)
     %     try
     %         close all
     datapath = strcat(path_data, '/', subjects{subj});
@@ -64,7 +64,7 @@ end
 
 
 %%  prosaccdata
-for subj = 6:7%:length(subjects)
+for subj = 25:length(subjects)%:length(subjects)
     %     try
     close all
     datapath = strcat(path_data, '/', subjects{subj});
@@ -116,7 +116,7 @@ end
 
 
 %%  antisaccdata
-for subj = 6:7%:length(subjects)
+for subj = 25:length(subjects)%:length(subjects)
     %     try
     close all
     datapath = strcat(path_data, '/', subjects{subj});
@@ -165,7 +165,7 @@ end
 
 %% start with anticuedata
 
-for subj = 6:7%:length(subjects)
+for subj = 25:length(subjects)%:length(subjects)
     %     try
     close all
     datapath = strcat(path_data, '/', subjects{subj});

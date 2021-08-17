@@ -1,0 +1,108 @@
+%% load data
+clc
+clear all
+
+addpath '\\130.60.169.45\methlab\Neurometric\Antisaccades\fieldtrip-20210730'
+ft_defaults
+
+x = dir('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\');
+subjects = {x.name};
+clear x
+
+addpath('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper')
+
+OLD = readtable('OLD.xlsx','Range','A1:A121');
+YNG = readtable('YOUNG.xlsx','Range', 'A1:A104');
+
+for subj = 4:length(subjects)
+
+        if ~any(ismember(OLD.Subject, subjects{subj}))%z tylda jesli nie jest stary to omin(tak wiec tylda stary, bez tyldy mlody)
+            continue;
+        end
+        datapath = strcat('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\',subjects{subj});
+        cd (datapath)
+        load tfrprosaccleftbleegcap
+        load tfrantisaccleftbleegcap
+        load tfrprosaccrightbleegcap
+        load tfrantisaccrightbleegcap
+        
+        
+    
+        
+        varsprosaccleft{subj-3} = tfrprosaccleftbleegcap;
+        varsprosaccright{subj-3} = tfrprosaccrightbleegcap;
+        varsantisaccleft{subj-3} = tfrantisaccleftbleegcap;
+        varsantisaccright{subj-3} = tfrantisaccrightbleegcap;
+        
+      
+
+end
+
+
+varsprosaccleft = varsprosaccleft(~cellfun('isempty',varsprosaccleft));
+varsprosaccright = varsprosaccright(~cellfun('isempty',varsprosaccright));
+varsantisaccleft = varsantisaccleft(~cellfun('isempty',varsantisaccleft));
+varsantisaccright = varsantisaccright(~cellfun('isempty',varsantisaccright));
+
+
+
+varsantisacc = ft_freqgrandaverage([],varsantisaccleft,varsantisaccright);
+varsprosacc=ft_freqgrandaverage([],ga_prosaccleft,ga_prosaccright);
+
+
+%% remove eegalab
+% rmpath(genpath('\\130.60.169.45\methlab\Neurometric\Antisaccades\code\eeglab14_1_2b'))
+%%
+cfg = [];
+cfg.spmversion       = 'spm12';
+cfg.frequency          = [2 30];
+cfg.latency          = [-.6 0];
+cfg.method           = 'montecarlo';
+% cfg.method           = 'analytic';%
+cfg.statistic        = 'ft_statfun_depsamplesT';
+ cfg.channel = {'E33' 'E122' 'E22' 'E9' 'E15'};
+
+cfg.correctm         = 'cluster';
+cfg.clusteralpha     = 0.05;
+cfg.clusterstatistic = 'maxsum';
+cfg.tail             = 0;
+cfg.clustertail      = 0;
+cfg.alpha            = 0.025;
+cfg.numrandomization = 100;
+cfg.neighbours       = [];
+clear design
+subj = 59;
+design = zeros(2,2*subj);
+for i = 1:subj
+    design(1,i) = i;
+end
+for i = 1:subj
+    design(1,subj+i) = i;
+end
+design(2,1:subj)        = 1;
+design(2,subj+1:2*subj) = 2;
+
+cfg.design   = design;
+cfg.uvar     = 1;
+cfg.ivar     = 2;
+%%%%% this is design for indep sample
+% design = zeros(1,numel(varsprosacc) + numel(varsantisacc));
+% design(1,1:numel(varsprosacc)) = 1;
+% design(1,numel(varsprosacc)+1 :...
+%     numel(varsprosacc)+ numel(varsantisacc)) = 2;
+
+% cfg.design           = design;
+% cfg.ivar             = 1;
+
+[stat] = ft_freqstatistics(cfg, varsprosaccleft{:}, varsantisaccright{:});
+%%
+figure;
+cfg=[];
+cfg.figure = 'gcf';
+cfg.parameter = 'stat';
+cfg.maskparameter = 'mask';
+cfg.maskstyle = 'outline';
+cfg.zlim  = [-3 3];
+cfg.channel = {'E33' 'E122' 'E22' 'E9' 'E15'};
+
+ft_singleplotTFR(cfg,stat);

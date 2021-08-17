@@ -138,7 +138,7 @@ cfg=[];
 cfg.figure = 'gcf';
 cfg.zlim = 'absmax';
 cfg.channel = {'superiorfrontal L' 'superiorfrontal R' };
-ft_singleplotTFR(cfg,ga_ERantisacc);
+ft_singleplotTFR(cfg,ga_ERRantisacc);
 hold on
 xline(0,'Linewidth',2)
 set(gcf,'color','white');

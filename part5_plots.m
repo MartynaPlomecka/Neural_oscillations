@@ -32,28 +32,28 @@ varspro = cell(1,3);
 varsanti = cell(1,3);
 powspctrm = zeros(nsub, 68,20,40);
 
-for subj = 4:6%14 %41%length(subjects)
+for subj = 4:6%
       try
     %%
     datapath = strcat('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\',subjects{subj});
     cd (datapath)
-    load tfrprocueleftbl
-     load tfrprosaccleftbl
-    load tfranticueleftbl
-    load tfrantisaccleftbl
+%     load tfrprocueleftbl
+      load tfrprosaccleftbl
+%     load tfranticueleftbl
+     load tfrantisaccleftbl
     
-    load tfrprocuerightbl
-     load tfrprosaccrightbl
-    load tfranticuerightbl
+%     load tfrprocuerightbl
+    load tfrprosaccrightbl
+%     load tfranticuerightbl
     load tfrantisaccrightbl
     
     
-    varsprocueleft{subj-3} = tfrprocueleftbl;
-    varsprocueright{subj-3} = tfrprocuerightbl;
+%     varsprocueleft{subj-3} = tfrprocueleftbl;
+%     varsprocueright{subj-3} = tfrprocuerightbl;
     varsprosaccleft{subj-3} = tfrprosaccleftbl;
     varsprosaccright{subj-3} = tfrprosaccrightbl;
-    varsanticueleft{subj-3} = tfranticueleftbl;
-    varsanticueright{subj-3} = tfranticuerightbl;
+%     varsanticueleft{subj-3} = tfranticueleftbl;
+%     varsanticueright{subj-3} = tfranticuerightbl;
     varsantisaccleft{subj-3} = tfrantisaccleftbl;
     varsantisaccright{subj-3} = tfrantisaccrightbl;
     
@@ -73,10 +73,10 @@ ga_prosaccleft = ft_freqgrandaverage(cfg, varsprosaccleft{:});
 ga_prosaccright = ft_freqgrandaverage(cfg, varsprosaccright{:});
 
 
-ga_anticueleft = ft_freqgrandaverage(cfg, varsanticueleft{:});
-ga_anticueright = ft_freqgrandaverage(cfg, varsanticueright{:});
-ga_procueleft = ft_freqgrandaverage(cfg, varsprocueleft{:});
-ga_procueright = ft_freqgrandaverage(cfg, varsprocueright{:});
+% ga_anticueleft = ft_freqgrandaverage(cfg, varsanticueleft{:});
+% ga_anticueright = ft_freqgrandaverage(cfg, varsanticueright{:});
+% ga_procueleft = ft_freqgrandaverage(cfg, varsprocueleft{:});
+% ga_procueright = ft_freqgrandaverage(cfg, varsprocueright{:});
 %% compute difference
 
 cfg = [];
@@ -84,8 +84,8 @@ cfg.operation =  'subtract';
 cfg.parameter = 'powspctrm';
 
 
-diffcueleft = ft_math(cfg, ga_anticueleft, ga_procueleft);
-diffcueright = ft_math(cfg, ga_anticueright, ga_procueright);
+% diffcueleft = ft_math(cfg, ga_anticueleft, ga_procueleft);
+% diffcueright = ft_math(cfg, ga_anticueright, ga_procueright);
 diffsaccleft = ft_math(cfg, ga_antisaccleft, ga_prosaccleft);
 diffsaccright = ft_math(cfg, ga_antisaccright, ga_prosaccright);
 
@@ -443,7 +443,7 @@ ft_singleplotTFR(cfg,ga_prosaccright);
 hold on
 xline(0,'Linewidth',2)
 set(gcf,'color','white');
-title('FEF PRO','fontsize', 12,'fontname','Corbel')
+title('FEF PRO right','fontsize', 12,'fontname','Corbel')
 ft_hastoolbox('brewermap', 1);
 colormap(flipud(brewermap(64,'RdBu'))) % change the colormap
 %caxis([-1.5 1.5])

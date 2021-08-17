@@ -1,0 +1,205 @@
+
+
+%% reference of time freq
+clc
+clear all
+addpath '\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\fieldtrip-20200109'
+x = dir('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\');
+subjects = {x.name};
+clear x
+
+
+
+%% proSACCADE LOCKED
+
+for subj = 4:length(subjects) 
+    %     try
+    datapath = strcat('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\',subjects{subj});
+    cd (datapath)
+    
+    load prosaccdata
+    prosaccdata.rt = str2double(prosaccdata.rt);
+    prosaccdata.trialinfo = [prosaccdata.correctness,prosaccdata.dir, prosaccdata.rt];
+
+
+    cfg              = [];
+    cfg.output       = 'pow';
+    cfg.method       = 'mtmconvol';
+    cfg.taper        = 'hanning';
+    cfg.foi          = 2:2:40; %if i really used 40 low pass filter, then i dont have 40hz!!! check again, maybe that was 50, then 40 is fine!                        % analysis 1 to 40 Hz in steps of 1 Hz
+    cfg.t_ftimwin    = ones(length(cfg.foi),1).*0.5;   % length of time window = 1 sec, in order to have 1 Hz freq resolution
+    cfg.toi          = (prosaccdata.time{1}(1)+cfg.t_ftimwin(1)/2):0.05:(prosaccdata.time{1}(end)-cfg.t_ftimwin(1)/2);
+    % time window "slides" from -1.5 to 1.5 sec in steps of 0.05 sec (50 ms).
+    % time window from -1 to 2
+    cfg.keeptrials   = 'yes'; %SINCE THE DEFAULT IS NO
+    tfrprosacceegcap = ft_freqanalysis(cfg, prosaccdata);
+    tfrprosacceegcap = ft_freqdescriptives(cfg, tfrprosacceegcap); 
+    save tfrprosacceegcap tfrprosacceegcap
+
+
+    %%%%%%%% HERE BASELINING STARTS
+    %% do baseline first for sacc locked data
+    cfg                 = [];
+    cfg.baseline        = [-1.25 -1];
+    cfg.baselinetype    = 'db';
+    tfrblprosacceegcap           = ft_freqbaseline(cfg,tfrprosacceegcap);
+    tfrblprosacceegcap = ft_freqdescriptives(cfg, tfrblprosacceegcap); %this now averages across bl corrected
+    save tfrblprosacceegcap tfrblprosacceegcap
+    %% avergae over trials first and then do baseline 
+    cfg                 = [];
+%     cfg.trials = find(tfrprosacceegcap.trialinfo(:,2) == 1 & tfrprosacceegcap.trialinfo(:,1) == 1);%0 jest right
+    tfrprosacceegcap = ft_freqdescriptives(cfg, tfrprosacceegcap); %this now averages across bl corrected
+    cfg                 = [];
+    cfg.baseline        = [-1.25 -1];
+    cfg.baselinetype    = 'db';
+    tfrprosaccbleegcap           = ft_freqbaseline(cfg,tfrprosacceegcap);
+    save tfrprosaccbleegcap tfrprosaccbleegcap
+
+end
+
+
+%% antiSACCADE LOCKED
+
+for subj = 4:length(subjects) 
+    %     try
+    datapath = strcat('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\',subjects{subj});
+    cd (datapath)
+    
+    load antisaccdata
+    antisaccdata.rt = str2double(antisaccdata.rt);
+    antisaccdata.trialinfo = [antisaccdata.correctness,antisaccdata.dir, antisaccdata.rt];
+
+
+    cfg              = [];
+    cfg.output       = 'pow';
+    cfg.method       = 'mtmconvol';
+    cfg.taper        = 'hanning';
+    cfg.foi          = 2:2:40; %if i really used 40 low pass filter, then i dont have 40hz!!! check again, maybe that was 50, then 40 is fine!                        % analysis 1 to 40 Hz in steps of 1 Hz
+    cfg.t_ftimwin    = ones(length(cfg.foi),1).*0.5;   % length of time window = 1 sec, in order to have 1 Hz freq resolution
+    cfg.toi          = (antisaccdata.time{1}(1)+cfg.t_ftimwin(1)/2):0.05:(antisaccdata.time{1}(end)-cfg.t_ftimwin(1)/2);
+    % time window "slides" from -1.5 to 1.5 sec in steps of 0.05 sec (50 ms).
+    % time window from -1 to 2
+    cfg.keeptrials   = 'yes'; %SINCE THE DEFAULT IS NO
+    tfrantisacceegcap = ft_freqanalysis(cfg, antisaccdata);
+    tfrantisacceegcap = ft_freqdescriptives(cfg, tfrantisacceegcap); 
+    save tfrantisacceegcap tfrantisacceegcap
+
+
+    %%%%%%%% HERE BASELINING STARTS
+    %% do baseline first for sacc locked data
+    cfg                 = [];
+    cfg.baseline        = [-1.25 -1];
+    cfg.baselinetype    = 'db';
+    tfrblantisacceegcap           = ft_freqbaseline(cfg,tfrantisacceegcap);
+    tfrblantisacceegcap = ft_freqdescriptives(cfg, tfrblantisacceegcap); %this now averages across bl corrected
+    save tfrblantisacceegcap tfrblantisacceegcap
+    %% avergae over trials first and then do baseline 
+    cfg                 = [];
+%     cfg.trials = find(tfrantisacceegcap.trialinfo(:,2) == 1 & tfrantisacceegcap.trialinfo(:,1) == 1);%0 jest right
+    tfrantisacceegcap = ft_freqdescriptives(cfg, tfrantisacceegcap); %this now averages across bl corrected
+    cfg                 = [];
+    cfg.baseline        = [-1.25 -1];
+    cfg.baselinetype    = 'db';
+    tfrantisaccbleegcap           = ft_freqbaseline(cfg,tfrantisacceegcap);
+    save tfrantisaccbleegcap tfrantisaccbleegcap
+
+end
+
+%%%%%%%%%%%%%%
+%% CUE LOCK
+%%%%%%%%%%%%%%
+%% procue LOCKED
+
+for subj = 4:length(subjects) 
+    %     try
+    datapath = strcat('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\',subjects{subj});
+    cd (datapath)
+    
+    load procuedata
+    procuedata.rt = str2double(procuedata.rt);
+    procuedata.trialinfo = [procuedata.correctness,procuedata.dir, procuedata.rt];
+
+
+    cfg              = [];
+    cfg.output       = 'pow';
+    cfg.method       = 'mtmconvol';
+    cfg.taper        = 'hanning';
+    cfg.foi          = 2:2:40; %if i really used 40 low pass filter, then i dont have 40hz!!! check again, maybe that was 50, then 40 is fine!                        % analysis 1 to 40 Hz in steps of 1 Hz
+    cfg.t_ftimwin    = ones(length(cfg.foi),1).*0.5;   % length of time window = 1 sec, in order to have 1 Hz freq resolution
+    cfg.toi          = (procuedata.time{1}(1)+cfg.t_ftimwin(1)/2):0.05:(procuedata.time{1}(end)-cfg.t_ftimwin(1)/2);
+    % time window "slides" from -1.5 to 1.5 sec in steps of 0.05 sec (50 ms).
+    % time window from -1 to 2
+    cfg.keeptrials   = 'yes'; %SINCE THE DEFAULT IS NO
+    tfrprocueeegcap = ft_freqanalysis(cfg, procuedata);
+    tfrprocueeegcap = ft_freqdescriptives(cfg, tfrprocueeegcap); 
+    save tfrprocueeegcap tfrprocueeegcap
+
+
+    %%%%%%%% HERE BASELINING STARTS
+    %% do baseline first for cue locked data
+    cfg                 = [];
+    cfg.baseline        = [-.55 -.25];
+    cfg.baselinetype    = 'db';
+    tfrblprocueeegcap           = ft_freqbaseline(cfg,tfrprocueeegcap);
+    tfrblprocueeegcap = ft_freqdescriptives(cfg, tfrblprocueeegcap); %this now averages across bl corrected
+    save tfrblprocueeegcap tfrblprocueeegcap
+    %% avergae over trials first and then do baseline 
+    cfg                 = [];
+%     cfg.trials = find(tfrprocueeegcap.trialinfo(:,2) == 1 & tfrprocueeegcap.trialinfo(:,1) == 1);%0 jest right
+    tfrprocueeegcap = ft_freqdescriptives(cfg, tfrprocueeegcap); %this now averages across bl corrected
+    cfg                 = [];
+    cfg.baseline        = [-.55 -.25];
+    cfg.baselinetype    = 'db';
+    tfrprocuebleegcap           = ft_freqbaseline(cfg,tfrprocueeegcap);
+    save tfrprocuebleegcap tfrprocuebleegcap
+
+end
+
+
+%% anticue
+
+for subj = 4:length(subjects) 
+    %     try
+    datapath = strcat('\\130.60.169.45\methlab\Neurometric\Antisaccades\new_paper\martyna\',subjects{subj});
+    cd (datapath)
+    
+    load anticuedata
+    anticuedata.rt = str2double(anticuedata.rt);
+    anticuedata.trialinfo = [anticuedata.correctness,anticuedata.dir, anticuedata.rt];
+
+
+    cfg              = [];
+    cfg.output       = 'pow';
+    cfg.method       = 'mtmconvol';
+    cfg.taper        = 'hanning';
+    cfg.foi          = 2:2:40; %if i really used 40 low pass filter, then i dont have 40hz!!! check again, maybe that was 50, then 40 is fine!                        % analysis 1 to 40 Hz in steps of 1 Hz
+    cfg.t_ftimwin    = ones(length(cfg.foi),1).*0.5;   % length of time window = 1 sec, in order to have 1 Hz freq resolution
+    cfg.toi          = (anticuedata.time{1}(1)+cfg.t_ftimwin(1)/2):0.05:(anticuedata.time{1}(end)-cfg.t_ftimwin(1)/2);
+    % time window "slides" from -1.5 to 1.5 sec in steps of 0.05 sec (50 ms).
+    % time window from -1 to 2
+    cfg.keeptrials   = 'yes'; %SINCE THE DEFAULT IS NO
+    tfranticueeegcap = ft_freqanalysis(cfg, anticuedata);
+    tfranticueeegcap = ft_freqdescriptives(cfg, tfranticueeegcap); 
+    save tfranticueeegcap tfranticueeegcap
+
+
+    %%%%%%%% HERE BASELINING STARTS
+    %% do baseline first for cue locked data
+    cfg                 = [];
+    cfg.baseline        = [-.55 -.25];
+    cfg.baselinetype    = 'db';
+    tfrblanticueeegcap           = ft_freqbaseline(cfg,tfranticueeegcap);
+    tfrblanticueeegcap = ft_freqdescriptives(cfg, tfrblanticueeegcap); %this now averages across bl corrected
+    save tfrblanticueeegcap tfrblanticueeegcap
+    %% avergae over trials first and then do baseline 
+    cfg                 = [];
+%     cfg.trials = find(tfranticueeegcap.trialinfo(:,2) == 1 & tfranticueeegcap.trialinfo(:,1) == 1);%0 jest right
+    tfranticueeegcap = ft_freqdescriptives(cfg, tfranticueeegcap); %this now averages across bl corrected
+    cfg                 = [];
+    cfg.baseline        = [-.55 -.25];
+    cfg.baselinetype    = 'db';
+    tfranticuebleegcap           = ft_freqbaseline(cfg,tfranticueeegcap);
+    save tfranticuebleegcap tfranticuebleegcap
+
+end
+
